@@ -658,6 +658,37 @@ sudo apt install ripgrep
 - Enable transparency in terminal settings
 - Toggle in Neovim: `<leader>bg`
 
+### image.nvim Build Warning (Lua 5.1 Required)
+
+**Problem**: Error message when installing plugins:
+```
+`lua` version `5.1` needed, but found `Lua 5.4.8`
+Will try building anyway, but will likely fail...
+```
+
+**What's happening**: The `image.nvim` plugin (used for Neo-tree image previews) requires Lua 5.1, but your system has Lua 5.4.
+
+**Solution**: Enable `hererocks` in your lazy.nvim configuration. This is already configured in `init.lua`:
+
+```lua
+require('lazy').setup({
+  -- ... plugins ...
+}, {
+  rocks = {
+    enabled = true,
+    hererocks = true, -- Automatically install Lua 5.1 for plugins that need it
+  },
+})
+```
+
+- **hererocks** automatically manages different Lua versions for different plugins
+- No system-level changes needed
+- After the first restart with this config, the warning should disappear
+
+**Alternative solutions** if you don't want hererocks:
+1. Remove `image.nvim` from `lua/plugins/neotree.lua` dependencies (line 8) if you don't need image previews
+2. Install Lua 5.1 system-wide: `sudo apt install lua5.1 liblua5.1-dev` (Ubuntu/Debian)
+
 ---
 
 ## ❓ FAQ
